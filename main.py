@@ -14,14 +14,23 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 
 @client.event
+async def on_ready():
+    print(f"Bot connected as {client.user}")
+
+@client.event
 async def on_message(message):
+    # Debug print to check if bot receives messages
+    print("Message received:", message.content, "Channel:", message.channel.id)
+
     if message.channel.id == CHANNEL_ID and not message.author.bot:
         text = f"{message.author}: {message.content}"
 
         url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-        requests.post(url, data={
+        response = requests.post(url, data={
             "chat_id": TELEGRAM_CHAT_ID,
             "text": text
         })
+
+        print("Telegram response:", response.text)
 
 client.run(DISCORD_TOKEN)
