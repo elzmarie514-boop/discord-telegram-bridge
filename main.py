@@ -19,18 +19,21 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    # Debug print to check if bot receives messages
+
     print("Message received:", message.content, "Channel:", message.channel.id)
 
-    if message.channel.id == CHANNEL_ID and not message.author.bot:
+    if message.channel.id == CHANNEL_ID:
         text = f"{message.author}: {message.content}"
 
+        print("Sending to Telegram:", text)
+
         url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-        response = requests.post(url, data={
+
+        r = requests.post(url, data={
             "chat_id": TELEGRAM_CHAT_ID,
             "text": text
         })
 
-        print("Telegram response:", response.text)
+        print("Telegram response:", r.text)
 
 client.run(DISCORD_TOKEN)
