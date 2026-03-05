@@ -20,20 +20,23 @@ async def on_ready():
 @client.event
 async def on_message(message):
 
-    print("Message received:", message.content, "Channel:", message.channel.id)
-
     if message.channel.id == CHANNEL_ID:
-        text = f"{message.author}: {message.content}"
 
-        print("Sending to Telegram:", text)
+        clean_text = message.content.replace(":", ":\n")
+
+        text = f"""
+📢 Discord Message
+
+👤 {message.author.name}
+
+{clean_text}
+"""
 
         url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
 
-        r = requests.post(url, data={
+        requests.post(url, data={
             "chat_id": TELEGRAM_CHAT_ID,
             "text": text
         })
-
-        print("Telegram response:", r.text)
 
 client.run(DISCORD_TOKEN)
